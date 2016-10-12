@@ -1,13 +1,20 @@
+import psycopg2
 import logging
 
 logging.basicConfig(filename="snippets.log", level= logging.DEBUG)
-
+logging.debug("Connecting to PostgreSQL")
+connection = psycopg2.connect(database="snippets")
+logging.debug("Database connection established.")
 def put(name, snippet):
-    """
-    Store a snippt with an associated name.
+    logging.info("Storing snippet {!r}: {!r}".format(name, snippet))
+    cursor = connection.cursor()
+    command = "insert into snippets values (%s, %s)"
+    cursor.execute(command, (name, snippet))
+    connection.commit()
+    logging.debug("Snippet stored successfully.")
+    return name, snippet
 
-    Returns the name and the snippet
-    """
+
     logging.error("FIXME: Unimplemented - put({!r}, {!r})".format(name, snippet))
     return name, snippet
 
